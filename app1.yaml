@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: server
+  name: server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: server
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        deployment: server
+    spec:
+      containers:
+      - image: quay.io/redhattraining/hello-world-nginx
+        name: hello-world-nginx
+        ports:
+        - containerPort: 8443
+          protocol: TCP
+        volumeMounts:
+        - name: tls-conf-vol 
+          mountPath: /etc/nginx/conf.d/
+        resources: {}
+      volumes:
+      - name: tls-conf-vol
+        configMap:
+          name: tls-conf
+status: {}

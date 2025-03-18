@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: client
+  name: client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: client
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        deployment: client
+    spec:
+      containers:
+      - image: quay.io/redhattraining/hello-world-nginx
+        name: hello-world-nginx
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        volumeMounts:
+        - name: trusted-ca
+          mountPath: /etc/pki/ca-trust/extracted/pem
+        resources: {}
+      volumes:
+        - name: trusted-ca
+          configMap:
+            defaultMode: 420
+            name: ca-bundle
+            items:
+              - key: service-ca.crt
+                path: tls-ca-bundle.pem
+status: {}
